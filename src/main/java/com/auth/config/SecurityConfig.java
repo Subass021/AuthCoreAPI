@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
                     .csrf(csrf -> csrf.disable()) // 🔒 Disable CSRF for API
                     .authorizeHttpRequests(requests -> requests
                             .requestMatchers("/api/auth/**").permitAll() // ✅ Public endpoints
+                            .requestMatchers("/h2-console/**").permitAll() // Allow console access
                             .anyRequest().authenticated()); // 🔐 All other endpoints require authentication
 
 	        return http.build();
