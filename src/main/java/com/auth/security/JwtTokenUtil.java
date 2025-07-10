@@ -9,9 +9,11 @@ import java.security.Key;
 
 @Component
 public class JwtTokenUtil {
+    
+	private static final String SECRET = "mySuperSecretKeyForJwtWhichShouldBeAtLeast32Chars";
+    private final Key secretKey = Keys.hmacShaKeyFor(SECRET.getBytes());
 
-    private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private final long expiration = 24 * 60 * 60 * 1000; // 1 day in Ms
+    private final long expiration = 1000 * 60 * 60 * 10; // 10 hours 
 
     public String generateToken(String username) {
         return Jwts.builder()
@@ -30,4 +32,32 @@ public class JwtTokenUtil {
                 .getBody()
                 .getSubject();
     }
+
+    // 🆕 STEP 2: Validate token
+    public boolean validateToken(String token) {
+        try {
+            parseToken(token);
+            return true;
+        } catch (ExpiredJwtException e) {
+            System.out.println(" JWT expired");
+        } catch (UnsupportedJwtException e) {
+            System.out.println(" JWT not supported");
+        } catch (MalformedJwtException e) {
+            System.out.println(" Malformed JWT");
+        } catch (@SuppressWarnings("deprecation") SignatureException e) {
+            System.out.println(" Invalid signature");
+        } catch (IllegalArgumentException e) {
+            System.out.println(" Empty claims");
+        }
+        return false;
+    }
+
+    // 🆕 Internal parser
+    private Jws<Claims> parseToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token);
+    }
 }
+

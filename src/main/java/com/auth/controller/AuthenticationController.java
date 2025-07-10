@@ -22,4 +22,6 @@ public class AuthenticationController {
         String token = userService.authenticateUser(loginRequest.getEmail(), loginRequest.getPassword());
         return ResponseEntity.ok(Map.of("token", token));
     }
+    
+ 
 }
