@@ -27,6 +27,8 @@ import com.auth.security.JwtAuthFilter;
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers("/h2-console/**").permitAll()
+            .requestMatchers("/api/user/**").hasRole("USER")   // ✅ Only USER can access user endpoints
+            .requestMatchers("/api/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //  JWT-based: no sessions
         .formLogin(form -> form.disable())

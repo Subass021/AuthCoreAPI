@@ -11,7 +11,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<String> getProfile() {
-        return ResponseEntity.ok("✅ Access granted");
+        return ResponseEntity.ok("✅ Access granted for user profile");
         
         
     }

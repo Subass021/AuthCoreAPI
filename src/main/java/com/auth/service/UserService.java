@@ -1,6 +1,7 @@
 package com.auth.service;
 
 import com.auth.dto.UserDto;
+import com.auth.entity.Role;
 import com.auth.entity.User;
 import com.auth.repository.UserRepository;
 import com.auth.security.JwtTokenUtil;
@@ -23,10 +24,14 @@ public class UserService {
         if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
             throw new RuntimeException("User already exists with this email");
         }
+        
+        
 
         String hashedPassword = passwordEncoder.encode(dto.getPassword());
 
         User user = new User(dto.getUsername(), dto.getEmail(), hashedPassword);
+        
+        user.setRole(Role.USER);  // 🆕 Automatically assign USER role
 
         userRepository.save(user);
     }
